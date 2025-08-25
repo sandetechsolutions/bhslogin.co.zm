@@ -10,7 +10,7 @@
 ---
 
 <p align="center">
-  © 2025 — Registered under the Patents and Companies Registration Agency (PACRA).  
+ By His Stripes Medical Centre  © | Sande Tech Solutions 2025 — Registered under the Patents and Companies Registration Agency (PACRA).  
   All documents, designs, icons, code, and related materials are legally protected.  
   Unauthorized copying, redistribution, or modification in any form is strictly prohibited.
 </p>
