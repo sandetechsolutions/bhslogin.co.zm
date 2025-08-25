@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Login Portal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding-top: 100px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 15px 30px;
+      background: #111;
+      border-bottom: 2px solid red;
+      z-index: 1000;
+    }
+
+    .login-container {
+      width: 380px;
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .login-container h2 {
+      color: red;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid red;
+      border-radius: 8px;
+      background: black;
+      color: white;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      background: red;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ff4d4d;
+    }
+
+    .links {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .links a {
+      display: block;
+      color: red;
+      text-decoration: none;
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .success {
+      color: lime;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>STAFF LOGIN PORTAL</h2>
+
+  <label for="system">Select System</label>
+  <select id="system">
+    <option value="">-- Choose System --</option>
+    <option value="1">Pharmacy System</option>
+    <option value="2">Management System</option>
+    <option value="3">Nurse System</option>
+  </select>
+
+  <label for="role">Select Position</label>
+  <select id="role">
+    <option value="">-- Choose Position --</option>
+    <option value="doctor">Doctor</option>
+    <option value="ops">Operations Manager</option>
+    <option value="manager">Hospital Manager</option>
+    <option value="pharmacy">Pharmacist/Tech</option>
+    <option value="nurse">Nurse</option>
+    <option value="accounts">Accounts Officer</option>
+  </select>
+
+  <label for="username">Username</label>
+  <input type="text" id="username" placeholder="Enter username">
+
+  <label for="password">Password</label>
+  <input type="password" id="password" placeholder="Enter password">
+
+  <button onclick="login()">Login</button>
+
+  <div class="links">
+    <a href="#" onclick="forgotPassword()">Forgot/Change Password?</a>
+    <a href="#" onclick="newUser()">New User? Register Here</a>
+  </div>
+
+  <div id="error" class="error"></div>
+  <div id="success" class="success"></div>
+</div>
+
+<script>
+  // Users database: username + password + role page
+  const users = {
+    "sichizya kachinga": { password: "0001", link: "https://docs.google.com/spreadsheets/d/1TOvjiGS5O2YMrXog_HcYKp28Ngkm81bJiDdaLUeW43c/edit?usp=sharing" },
+    "nyirenda steven": { password: "0001", link: "https://docs.google.com/spreadsheets/d/1TOvjiGS5O2YMrXog_HcYKp28Ngkm81bJiDdaLUeW43c/edit?usp=sharing" },
+    "sichizya alindela": { password: "0001", link: "https://docs.google.com/spreadsheets/d/1TOvjiGS5O2YMrXog_HcYKp28Ngkm81bJiDdaLUeW43c/edit?usp=sharing" },
+    "sakala bwalya": { password: "0005", link: "https://docs.google.com/spreadsheets/d/147H8jK76jW281m-Sad6ywHS3lROCZzx3F41_uP63a6A/edit?usp=sharing" },
+  "sichizya alindela": { password: "0005", link: "https://docs.google.com/spreadsheets/d/147H8jK76jW281m-Sad6ywHS3lROCZzx3F41_uP63a6A/edit?usp=sharing" },
+    "nkhata bertha": { password: "0006", link: "https://docs.google.com/spreadsheets/d/1sI7DffKTwkYxYqNuA5f3hjZsAhFDMeS_2Fql_7oskvs/edit?usp=sharing" },
+  "sichizya alindela": { password: "0006", link: "https://docs.google.com/spreadsheets/d/1sI7DffKTwkYxYqNuA5f3hjZsAhFDMeS_2Fql_7oskvs/edit?usp=sharing" },
+    "sande tendai": { password: "0001", link: "https://docs.google.com/spreadsheets/d/1TOvjiGS5O2YMrXog_HcYKp28Ngkm81bJiDdaLUeW43c/edit?usp=sharing" }
+  };
+
+  function login() {
+    const system = document.getElementById("system").value;
+    const role = document.getElementById("role").value;
+    const username = document.getElementById("username").value.trim().toLowerCase();
+    const password = document.getElementById("password").value.trim();
+    const errorBox = document.getElementById("error");
+    const successBox = document.getElementById("success");
+
+    errorBox.innerHTML = "";
+    successBox.innerHTML = "";
+
+    if (system && role && users[username] && password === users[username].password) {
+      successBox.innerHTML = "Please wait... verifying credentials";
+      
+      // random delay between 4–10 seconds
+      const delay = Math.floor(Math.random() * (10000 - 4000 + 1)) + 4000;
+      
+      setTimeout(() => {
+        successBox.innerHTML = "✅ Access Granted. Redirecting...";
+        setTimeout(() => {
+          window.location.href = users[username].link;
+        }, 2000);
+      }, delay);
+
+    } else {
+      errorBox.innerHTML = "❌ Access Denied. System closing down...";
+      setTimeout(() => {
+        window.location.href = "about:blank";
+        setTimeout(() => window.close(), 500);
+      }, 3000);
+    }
+  }
+
+  function forgotPassword() {
+    const reason = prompt("Enter reason for password reset:");
+    if (reason) {
+      window.location.href = `https://wa.me/260775506831?text=Password Reset Request:%0AReason: ${encodeURIComponent(reason)}`;
+    }
+  }
+
+  function newUser() {
+    const position = prompt("Enter Position (Doctor/Nurse/etc):");
+    const username = prompt("Enter Desired Username:");
+    const password = prompt("Enter Desired Password:");
+    if (position && username && password) {
+      const message = `New User Registration:%0APosition: ${position}%0AUsername: ${username}%0APassword: ${password}`;
+      window.location.href = `https://wa.me/260775506831?text=${message}`;
+    }
+  }
+</script>
+
+<script>
+  function checkSystemAvailability() {
+    const now = new Date();
+    const day = now.getDay(); // 0 = Sunday, 1 = Monday ... 6 = Saturday
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const currentTime = hours * 60 + minutes; // convert to minutes since midnight
+
+    let closed = false;
+    let message = "";
+    let closingTime = null;
+
+    // Sunday = closed all day
+    if (day === 0) {
+      closed = true;
+      message = "System Closed: Sunday (all day).";
+    }
+
+    // Monday–Friday -> close at 17:00
+    else if (day >= 1 && day <= 5) {
+      closingTime = 17 * 60; // 17:00 in minutes
+      if (currentTime >= closingTime) {
+        closed = true;
+        message = "System Closed: Weekdays after 5:00 PM.";
+      }
+    }
+
+    // Saturday -> close at 12:30
+    else if (day === 6) {
+      closingTime = 12 * 60 + 30; // 12:30 in minutes
+      if (currentTime >= closingTime) {
+        closed = true;
+        message = "System Closed: Saturday after 12:30 PM.";
+      }
+    }
+
+    // If system is closed
+    if (closed) {
+      document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:black;color:white;text-align:center;">
+          <h2 style="color:red;font-size:28px;">🚨 SYSTEM CLOSED 🚨</h2>
+          <p style="font-size:18px;">${message}</p>
+          <p style="font-size:16px;">You are being logged out...</p>
+        </div>
+      `;
+      setTimeout(() => {
+        window.location.href = "about:blank";
+        setTimeout(() => window.close(), 500);
+      }, 3000);
+    } 
+    else if (closingTime) {
+      // Show countdown if within 30 minutes of closing
+      let timeLeft = closingTime - currentTime;
+      if (timeLeft <= 30) {
+        let warningBox = document.getElementById("closing-warning");
+        if (!warningBox) {
+          warningBox = document.createElement("div");
+          warningBox.id = "closing-warning";
+          warningBox.style.position = "fixed";
+          warningBox.style.bottom = "10px";
+          warningBox.style.right = "10px";
+          warningBox.style.background = "red";
+          warningBox.style.color = "white";
+          warningBox.style.padding = "12px 18px";
+          warningBox.style.borderRadius = "8px";
+          warningBox.style.fontSize = "14px";
+          warningBox.style.fontWeight = "bold";
+          warningBox.style.boxShadow = "0 0 10px rgba(255,0,0,0.6)";
+          document.body.appendChild(warningBox);
+        }
+        warningBox.innerHTML = `⚠️ System will close in ${timeLeft} minute(s). Save your work!`;
+
+        // Blink if less than 5 minutes remain
+        if (timeLeft <= 5) {
+          warningBox.style.animation = "blink 1s infinite";
+        } else {
+          warningBox.style.animation = "";
+        }
+      }
+    }
+  }
+
+  // Blinking animation
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes blink {
+      0% { background: red; color: white; }
+      50% { background: white; color: red; }
+      100% { background: red; color: white; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Run check on page load
+  checkSystemAvailability();
+
+  // Keep checking every 30 seconds
+  setInterval(checkSystemAvailability, 30000);
+</script>
+
+
+</body>
+</html>
